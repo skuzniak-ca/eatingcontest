@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Eating Contest",
+  "version": "1.0.0",
+  "description": "Replace words on any web page with your own custom substitutions.",
+  "permissions": ["storage", "activeTab"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Eating Contest"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
