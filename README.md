@@ -20,7 +20,7 @@ Matching is whole-word and case-insensitive, so "election" matches but "reelecti
 - **chrome.storage.local** persists replacement pairs
 - Popup UI built with vanilla HTML/CSS/JS
 
-## Getting Started
+# Getting Started
 
 1. Clone this repository
 2. **Chrome**: Go to `chrome://extensions`, enable Developer mode, click "Load unpacked", and select the project folder
