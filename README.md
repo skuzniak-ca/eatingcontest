@@ -31,13 +31,11 @@ Matching is whole-word and case-insensitive, so "election" matches but "reelecti
 
 ```
 eatingcontest/
-|-- manifest.json   # Extension manifest (Manifest V3)
-|-- content.js      # Content script -- DOM text replacement
-|-- popup.html      # Popup UI markup
-|-- popup.js        # Popup UI logic
-|-- popup.css       # Popup styling
-|-- PLAN.md         # Implementation plan (not tracked in git)
-`-- CLAUDE.md       # Project memory (not tracked in git)
+├── manifest.json   # Extension manifest (Manifest V3)
+├── content.js      # Content script -- DOM text replacement
+├── popup.html      # Popup UI markup
+├── popup.js        # Popup UI logic
+├── popup.css       # Popup styling
 ```
 
 ## Acknowledgements
