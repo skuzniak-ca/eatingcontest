@@ -1,6 +1,6 @@
 # Eatingcontest
 
-A browser extension that dynamically replaces words on web pages with user-configurable substitutions. Started as a prank in a previous job where we replaced the word "election" with "eating contest".
+Eatingcontest is a browser extension (Firefox and Chrome) that dynamically replaces words on web pages with user-configurable substitutions. Started as a prank in a previous job where we replaced the word "election" with "eating contest".
 
 ## How It Works
 
