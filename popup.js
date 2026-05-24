@@ -56,15 +56,7 @@ async function loadPairs() {
 async function savePairs(pairs) {
   await api.storage.local.set({ pairs });
   renderPairs(pairs);
-  notifyContentScript();
-}
-
-function notifyContentScript() {
-  api.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-    if (tabs[0]) {
-      api.tabs.sendMessage(tabs[0].id, { action: "replacementsUpdated" });
-    }
-  });
+  // The content script reacts to storage.onChanged, so no message is needed.
 }
 
 async function addPair() {

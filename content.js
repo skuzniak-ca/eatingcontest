@@ -41,6 +41,7 @@ function replaceTextInNode(node, pairs) {
   node.nodeValue = originals.get(node);
 
   for (const { from, to } of pairs) {
+    if (!from) continue;  // ignore malformed/empty pairs
     const regex = buildRegex(from);
     node.nodeValue = node.nodeValue.replace(regex, to);
   }
@@ -91,34 +92,36 @@ function restoreAllOriginals() {
   }
 }
 
-// Load pairs and run
-api.storage.local.get({ pairs: [] }).then((data) => {
-  runReplacements(data.pairs);
-});
+// Cache pairs in memory so the MutationObserver doesn't hit storage on every
+// DOM change. Refreshed on load and whenever the stored pairs change.
+let currentPairs = [];
 
 // Watch for dynamically added content
 const observer = new MutationObserver((mutations) => {
-  api.storage.local.get({ pairs: [] }).then((data) => {
-    if (!data.pairs || data.pairs.length === 0) return;
-    for (const mutation of mutations) {
-      for (const node of mutation.addedNodes) {
-        if (node.nodeType === Node.TEXT_NODE) {
-          replaceTextInNode(node, data.pairs);
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-          walkAndReplace(node, data.pairs);
-        }
+  if (currentPairs.length === 0) return;
+  for (const mutation of mutations) {
+    for (const node of mutation.addedNodes) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        replaceTextInNode(node, currentPairs);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        walkAndReplace(node, currentPairs);
       }
     }
-  });
+  }
 });
 
 observer.observe(document.body, { childList: true, subtree: true });
 
-// Listen for messages from popup to re-run replacements
-api.runtime.onMessage.addListener((message) => {
-  if (message.action === "replacementsUpdated") {
-    api.storage.local.get({ pairs: [] }).then((data) => {
-      runReplacements(data.pairs);
-    });
+// Load pairs and run
+api.storage.local.get({ pairs: [] }).then((data) => {
+  currentPairs = data.pairs || [];
+  runReplacements(currentPairs);
+});
+
+// React to popup edits across every open tab (no message passing needed)
+api.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && changes.pairs) {
+    currentPairs = changes.pairs.newValue || [];
+    runReplacements(currentPairs);
   }
 });
